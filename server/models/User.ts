@@ -17,7 +17,6 @@ const userSchema = new mongoose.Schema(
 		password: {
 			type: String,
 			required: [true, '이메일 또는 패스워드를 입력해주세요.'],
-			trim: true,
 		},
 		avatar: {
 			type: String,
