@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
 import Users from '../models/User';
 import bcrypt from 'bcrypt';
-import { generateAccessToken } from '../config/generateToken';
+import { generateAccessToken } from '../config/token';
+import { validateEmail } from '../middleware/vaild';
+import sendEmail from '../config/mail';
+
+const CLIENT_URL = `${process.env.BASE_URL}`;
 
 const authController = {
 	register: async (req: Request, res: Response) => {
@@ -19,13 +23,12 @@ const authController = {
 			const newUser = { name, account, password: passwordHash };
 
 			const access_token = generateAccessToken({ newUser });
+			const url = `${CLIENT_URL}/access/${access_token}`;
 
-			res.json({
-				status: 'OK',
-				message: '회원가입이 완료되었습니다.',
-				data: newUser,
-				access_token,
-			});
+			if (validateEmail(account)) {
+				sendEmail(account, url, '이메일 인증하기');
+				return res.json({ message: '성공! 이메일을 확인해주세요.' });
+			}
 		} catch (err: any) {
 			return res.status(500).json({ message: err.message });
 		}
