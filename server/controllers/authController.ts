@@ -37,7 +37,7 @@ const authController = {
 				return res.json({ message: '성공! 이메일을 확인해주세요.' });
 			} else if (validatePhone(account)) {
 				sendSms(account, url, '이메일 인증하기');
-				return res.json({ message: '성공! 휴대번호를 확인해주세요.' });
+				return res.json({ message: '성공! 휴대전화를 확인해주세요.' });
 			}
 		} catch (err: any) {
 			return res.status(500).json({ message: err.message });
