@@ -2,11 +2,15 @@ import { Request, Response } from 'express';
 import Users from '../models/User';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { generateActiveToken } from '../config/token';
+import {
+	generateAccessToken,
+	generateActiveToken,
+	generateRefreshToken,
+} from '../config/token';
 import sendEmail from '../config/mail';
 import { validateEmail, validatePhone } from '../middleware/vaild';
 import { sendSms } from '../config/sms';
-import { IDecodedToken } from '../config/interface';
+import { IDecodedToken, IUser } from '../config/interface';
 
 const CLIENT_URL = `${process.env.BASE_URL}`;
 
@@ -68,6 +72,69 @@ const authController = {
 			return res.status(500).json({ message: errMsg });
 		}
 	},
+	login: async (req: Request, res: Response) => {
+		try {
+			const { account, password } = req.body;
+			const user = await Users.findOne({ account });
+			if (!user)
+				return res
+					.status(400)
+					.json({ message: '이 계정은 존재하지 않습니다.' });
+			// if user exists
+			loginUser(user, password, res);
+		} catch (err: any) {
+			return res.status(500).json({ message: err.message });
+		}
+	},
+	logout: async (req: Request, res: Response) => {
+		try {
+			res.clearCookie('refreshtoken', { path: `/api/refresh_token` });
+			return res.json({ message: '로그아웃!' });
+		} catch (err: any) {
+			return res.status(500).json({ message: err.message });
+		}
+	},
+	refreshToken: async (req: Request, res: Response) => {
+		try {
+			const rf_token = req.cookies.refreshtoken;
+			if (!rf_token)
+				return res.status(400).json({ message: '지금 로그인 하세요!' });
+			const decoded = <IDecodedToken>(
+				jwt.verify(rf_token, `${process.env.REFRESH_TOKEN}`)
+			);
+			if (!decoded)
+				return res.status(400).json({ message: '지금 로그인 하세요!' });
+			const user = await Users.findById(decoded.id).select('-password');
+			if (!user)
+				return res
+					.status(400)
+					.json({ message: '이 계정은 존재하지 않습니다.' });
+			const access_token = generateAccessToken({ id: user._id });
+			res.json({ access_token });
+		} catch (err: any) {
+			return res.status(500).json({ message: err.message });
+		}
+	},
+};
+
+const loginUser = async (user: IUser, password: string, res: Response) => {
+	const isMatch = await bcrypt.compare(password, user.password);
+	if (!isMatch)
+		return res.status(500).json({ message: '패스워드가 맞지 않습니다.' });
+	const access_token = generateAccessToken({ id: user._id });
+	const refresh_token = generateRefreshToken({ id: user._id });
+
+	res.cookie('refreshtoken', refresh_token, {
+		httpOnly: true,
+		path: `/api/refresh_token`,
+		maxAge: 30 * 24 * 60 * 60 * 1000, // 30days
+	});
+
+	res.json({
+		message: '로그인 성공!',
+		access_token,
+		user: { ...user._doc, password: '' },
+	});
 };
 
 export default authController;
