@@ -1,23 +1,16 @@
-import styled from 'styled-components';
-
-const Header = styled.div`
-	position: relative;
-	min-height: calc(100vh - 70px);
-`;
-
-const Title = styled.h2`
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	font-size: 30px;
-`;
-
 const NotFound = () => {
 	return (
-		<Header>
-			<Title>404 | Not Found</Title>
-		</Header>
+		<div
+			className='position-relative'
+			style={{ minHeight: 'calc(100vh - 70px)' }}
+		>
+			<h2
+				className='position-absolute text-secondary'
+				style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}
+			>
+				404 | NotFound
+			</h2>
+		</div>
 	);
 };
 
