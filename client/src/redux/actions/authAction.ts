@@ -1,10 +1,13 @@
 import { Dispatch } from 'redux';
 import { IAuthType } from '../types/authType';
-import { authActions } from '../reducers/authReducer';
-import { IUserLogin } from '../../utils/types';
-import { postAPI } from '../../utils/fetchData';
 import { IAlertType } from '../types/alertType';
+
+import { IUserLogin, IUserRegister } from '../../utils/types';
+import { postAPI } from '../../utils/fetchData';
+
+import { authActions } from '../reducers/authReducer';
 import { alertActions } from '../reducers/alertReducer';
+import { validRegister } from '../../utils/valid';
 
 export const login: any =
 	(userLogin: IUserLogin) =>
@@ -21,6 +24,21 @@ export const login: any =
 				})
 			);
 
+			dispatch(alertActions.getAlert({ success: res.data.message }));
+		} catch (err: any) {
+			dispatch(alertActions.getAlert({ errors: err.response.data.message }));
+		}
+	};
+
+export const register: any =
+	(userRegister: IUserRegister) =>
+	async (dispatch: Dispatch<IAuthType | IAlertType>) => {
+		const check = validRegister(userRegister);
+		if (check.errLength > 0)
+			return dispatch(alertActions.getAlert({ errors: check.errMessage }));
+		try {
+			dispatch(alertActions.getAlert({ loading: true }));
+			const res = await postAPI('register', userRegister);
 			dispatch(alertActions.getAlert({ success: res.data.message }));
 		} catch (err: any) {
 			dispatch(alertActions.getAlert({ errors: err.response.data.message }));

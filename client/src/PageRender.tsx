@@ -19,7 +19,6 @@ const PageRender = () => {
 	if (page) {
 		name = slug ? `${page}/[slug]` : `${page}`;
 	}
-	console.log(slug);
 	return generatePage(name);
 };
 

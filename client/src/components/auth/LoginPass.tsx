@@ -35,6 +35,7 @@ const LoginPass = () => {
 					name='account'
 					value={account}
 					onChange={handleChangeInput}
+					autoComplete='on'
 				/>
 			</div>
 			<div className='form-group mb-3'>
@@ -49,6 +50,7 @@ const LoginPass = () => {
 						name='password'
 						value={password}
 						onChange={handleChangeInput}
+						autoComplete='on'
 					/>
 					<small onClick={() => setTypePass(!typePass)}>
 						{typePass ? '숨기기' : '보기'}
