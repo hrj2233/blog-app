@@ -1,7 +1,8 @@
 import { IUser } from '../../utils/types';
 
 export interface IAuth {
-	token?: string;
+	message?: string;
+	access_token?: string;
 	user?: IUser;
 }
 

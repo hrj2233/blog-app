@@ -56,20 +56,16 @@ const authController = {
 			if (!newUser)
 				return res.status(400).json({ message: '잘못된 인증입니다.' });
 
-			const user = new Users(newUser);
+			const user = await Users.findOne({ account: newUser.account });
+			if (user)
+				return res.status(400).json({ message: '계정이 이미 존재합니다.' });
 
-			await user.save();
+			const new_user = new Users(newUser);
 
-			res.json({ message: '계정이 활성화되었습니다!' });
+			await new_user.save();
+			return res.json({ message: '계정이 활성화 되었습니다!' });
 		} catch (err: any) {
-			let errMsg;
-			if (err.code === 11000) {
-				errMsg = Object.keys(err.keyValue)[0] + '가 이미 존재합니다.';
-			} else {
-				let name = Object.keys(err.errors)[0];
-				errMsg = err.errors[`${name}`].properties.message;
-			}
-			return res.status(500).json({ message: errMsg });
+			return res.status(500).json({ message: err.message });
 		}
 	},
 	login: async (req: Request, res: Response) => {

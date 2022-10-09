@@ -19,7 +19,8 @@ export const login: any =
 
 			dispatch(
 				authActions.getAuth({
-					token: res.data.access_token,
+					message: res.data.message,
+					access_token: res.data.access_token,
 					user: res.data.user,
 				})
 			);
@@ -34,11 +35,15 @@ export const register: any =
 	(userRegister: IUserRegister) =>
 	async (dispatch: Dispatch<IAuthType | IAlertType>) => {
 		const check = validRegister(userRegister);
+
 		if (check.errLength > 0)
 			return dispatch(alertActions.getAlert({ errors: check.errMessage }));
+
 		try {
 			dispatch(alertActions.getAlert({ loading: true }));
+
 			const res = await postAPI('register', userRegister);
+
 			dispatch(alertActions.getAlert({ success: res.data.message }));
 		} catch (err: any) {
 			dispatch(alertActions.getAlert({ errors: err.response.data.message }));

@@ -3,7 +3,7 @@ import { RootState } from '../../redux/store';
 import Loading from './Loading';
 import Toast from './Toast';
 
-const Alert = () => {
+export const Alert = () => {
 	const { alert } = useSelector((state: RootState) => state);
 	return (
 		<div>
@@ -18,4 +18,10 @@ const Alert = () => {
 	);
 };
 
-export default Alert;
+export const showErrorMessage = (msg: string) => {
+	return <div className='errMsg'>{msg}</div>;
+};
+
+export const showSuccessMessage = (msg: string) => {
+	return <div className='successMsg'>{msg}</div>;
+};
