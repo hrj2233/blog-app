@@ -14,8 +14,12 @@ code {
 		monospace;
 }
 
-a {
-	text-decoration: none;
+.avatar {
+	width: 30px;
+	height: 30px;
+	object-fit: cover;
+	transform: translateY(-3px);
+	border-radius: 50%;
 }
 
 /* ---------- Auth Page------------ */

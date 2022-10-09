@@ -106,7 +106,7 @@ const authController = {
 					.status(400)
 					.json({ message: '이 계정은 존재하지 않습니다.' });
 			const access_token = generateAccessToken({ id: user._id });
-			res.json({ access_token });
+			res.json({ access_token, user });
 		} catch (err: any) {
 			return res.status(500).json({ message: err.message });
 		}

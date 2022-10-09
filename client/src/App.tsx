@@ -4,8 +4,17 @@ import Footer from './components/global/Footer';
 import Header from './components/global/Header';
 import PageRender from './PageRender';
 import Home from './pages/home';
+import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { refreshToken } from './redux/actions/authAction';
 
 const App = () => {
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		dispatch(refreshToken());
+	}, [dispatch]);
+
 	return (
 		<div className='container'>
 			<Router>

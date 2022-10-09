@@ -1,15 +1,27 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import LoginPass from '../components/auth/LoginPass';
 import LoginSMS from '../components/auth/LoginSMS';
+import { RootState } from '../redux/store';
+import { useSelector } from 'react-redux';
 
 const Login = () => {
 	const [sms, setSms] = useState(false);
+	const navigate = useNavigate();
+
+	const { auth } = useSelector((state: RootState) => state);
+
+	useEffect(() => {
+		if (auth.access_token) navigate('/');
+	}, [auth.access_token, navigate]);
+
 	return (
 		<div className='auth_page'>
 			<div className='auth_box'>
 				<h2 className='text-uppercase text-center mb-4'>로그인</h2>
+
 				{sms ? <LoginSMS /> : <LoginPass />}
+
 				<small className='row my-2 text-primary' style={{ cursor: 'pointer' }}>
 					<span className='col-6'>
 						<Link to='/forgot_password'>비밀번호를 잊어버리셨나요?</Link>
