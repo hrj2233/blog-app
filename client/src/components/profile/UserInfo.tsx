@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { updateUser } from '../../redux/actions/profileAction';
 import { RootState } from '../../redux/store';
-import { InputChange, IUserProfile } from '../../utils/types';
+import { FormSubmit, InputChange, IUserProfile } from '../../utils/types';
 import NotFound from '../global/NotFound';
 
 const UserInfo = () => {
@@ -34,12 +35,17 @@ const UserInfo = () => {
 		}
 	};
 
+	const handleSubmit = (e: FormSubmit) => {
+		e.preventDefault();
+		if (avatar || name) dispatch(updateUser(avatar, name, auth));
+	};
+
 	const { name, account, avatar, password, cf_password }: any = user;
 
 	if (!auth.user) return <NotFound />;
 
 	return (
-		<form className='profile_info'>
+		<form className='profile_info' onSubmit={handleSubmit}>
 			<div className='info_avatar'>
 				<img
 					src={avatar ? URL.createObjectURL(avatar) : auth.user.avatar}
@@ -92,6 +98,7 @@ const UserInfo = () => {
 						name='password'
 						value={password}
 						onChange={handleChangeInput}
+						autoComplete='on'
 					/>
 
 					<small onClick={() => setTypePass(!typePass)}>
@@ -111,6 +118,7 @@ const UserInfo = () => {
 						name='cf_password'
 						value={cf_password}
 						onChange={handleChangeInput}
+						autoComplete='on'
 					/>
 
 					<small onClick={() => setTypeCfPass(!typeCfPass)}>
