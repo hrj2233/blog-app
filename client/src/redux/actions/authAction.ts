@@ -7,7 +7,7 @@ import { getAPI, postAPI } from '../../utils/fetchData';
 
 import { authActions } from '../reducers/authReducer';
 import { alertActions } from '../reducers/alertReducer';
-import { validRegister } from '../../utils/valid';
+import { validatePhone, validRegister } from '../../utils/valid';
 
 export const login: any =
 	(userLogin: IUserLogin) =>
@@ -90,3 +90,39 @@ export const googleLogin: any =
 			dispatch(alertActions.getAlert({ errors: err.response.data.message }));
 		}
 	};
+
+export const loginSMS: any =
+	(phone: string) => async (dispatch: Dispatch<IAuthType | IAlertType>) => {
+		const check = validatePhone(phone);
+		if (!check)
+			return dispatch(
+				alertActions.getAlert({ errors: '전화 번호 형식이 부정확합니다.' })
+			);
+		try {
+			dispatch(alertActions.getAlert({ loading: true }));
+			const res = await postAPI('login_sms', { phone });
+			if (!res.data.valid) verifySMS(phone, dispatch);
+		} catch (err: any) {
+			dispatch(alertActions.getAlert({ errors: err.response.data.message }));
+		}
+	};
+
+export const verifySMS = async (
+	phone: string,
+	dispatch: Dispatch<IAuthType | IAlertType>
+) => {
+	const code = prompt('코드를 입력하세요.');
+	if (!code) return;
+	try {
+		dispatch(alertActions.getAlert({ loading: true }));
+		const res = await postAPI('sms_verify', { phone, code });
+		dispatch(authActions.getAuth(res.data));
+		dispatch(alertActions.getAlert({ success: res.data.message }));
+		localStorage.setItem('logged', 'user');
+	} catch (err: any) {
+		dispatch(alertActions.getAlert({ errors: err.response.data.message }));
+		setTimeout(() => {
+			verifySMS(phone, dispatch);
+		}, 100);
+	}
+};

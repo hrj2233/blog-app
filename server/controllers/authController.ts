@@ -9,7 +9,7 @@ import {
 } from '../config/token';
 import sendEmail from '../config/mail';
 import { validateEmail, validatePhone } from '../middleware/vaild';
-import { sendSms } from '../config/sms';
+import { sendSms, smsOTP, smsVerify } from '../config/sms';
 import {
 	IDecodedToken,
 	IUser,
@@ -144,6 +144,41 @@ const authController = {
 					account: email,
 					password: passwordHash,
 					avatar: picture,
+					type: 'login',
+				};
+				registerUser(user, res);
+			}
+		} catch (err: any) {
+			return res.status(500).json({ message: err.message });
+		}
+	},
+	loginSMS: async (req: Request, res: Response) => {
+		try {
+			const { phone } = req.body;
+			const data = await smsOTP(phone, 'sms');
+			res.json(data);
+		} catch (err: any) {
+			return res.status(500).json({ message: err.message });
+		}
+	},
+	smsVerify: async (req: Request, res: Response) => {
+		try {
+			const { phone, code } = req.body;
+			const data = await smsVerify(phone, code);
+			if (!data?.valid)
+				return res.status(400).json({ message: '잘못된 인증입니다.' });
+			const password = phone + 'your phone secrect password';
+			const passwordHash = await bcrypt.hash(password, 12);
+
+			const user = await Users.findOne({ account: phone });
+
+			if (user) {
+				loginUser(user, password, res);
+			} else {
+				const user = {
+					name: phone,
+					account: phone,
+					password: passwordHash,
 					type: 'login',
 				};
 				registerUser(user, res);

@@ -29,7 +29,7 @@ export const validRegister = (userRegister: IUserRegister) => {
 };
 
 export const validatePhone = (phone: string) => {
-	const re = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3,4}[-\s.]?[0-9]{4,6}$/im;
+	const re = /^[+]/g;
 	return re.test(phone);
 };
 

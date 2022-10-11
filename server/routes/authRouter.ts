@@ -10,4 +10,6 @@ router.post('/login', authController.login);
 router.get('/logout', authController.logout);
 router.get('/refresh_token', authController.refreshToken);
 router.post('/google_login', authController.googleLogin);
+router.post('/login_sms', authController.loginSMS);
+router.post('/sms_verify', authController.smsVerify);
 export default router;
