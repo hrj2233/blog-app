@@ -28,3 +28,7 @@ export interface IAlert {
 	success?: string | string[];
 	errors?: string | string[];
 }
+
+export interface IUserProfile extends IUserRegister {
+	avatar: string | File;
+}
