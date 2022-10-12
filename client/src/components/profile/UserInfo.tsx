@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateUser } from '../../redux/actions/profileAction';
+import { resetPassword, updateUser } from '../../redux/actions/profileAction';
 import { RootState } from '../../redux/store';
 import { FormSubmit, InputChange, IUserProfile } from '../../utils/types';
 import NotFound from '../global/NotFound';
@@ -38,9 +38,11 @@ const UserInfo = () => {
 	const handleSubmit = (e: FormSubmit) => {
 		e.preventDefault();
 		if (avatar || name) dispatch(updateUser(avatar, name, auth));
+		if (password && auth.access_token)
+			dispatch(resetPassword(password, cf_password, auth.access_token));
 	};
 
-	const { name, account, avatar, password, cf_password }: any = user;
+	const { name, avatar, password, cf_password }: any = user;
 
 	if (!auth.user) return <NotFound />;
 
@@ -87,6 +89,11 @@ const UserInfo = () => {
 					disabled={true}
 				/>
 			</div>
+			{auth.user.type !== 'register' && (
+				<small className='text-danger'>
+					* {auth.user.type} 로그인 계정은 이 기능을 사용할 수 없습니다. *
+				</small>
+			)}
 			<div className='form-group my-3'>
 				<label htmlFor='password'>Password</label>
 
@@ -99,6 +106,7 @@ const UserInfo = () => {
 						value={password}
 						onChange={handleChangeInput}
 						autoComplete='on'
+						disabled={auth.user.type !== 'register'}
 					/>
 
 					<small onClick={() => setTypePass(!typePass)}>
@@ -119,6 +127,7 @@ const UserInfo = () => {
 						value={cf_password}
 						onChange={handleChangeInput}
 						autoComplete='on'
+						disabled={auth.user.type !== 'register'}
 					/>
 
 					<small onClick={() => setTypeCfPass(!typeCfPass)}>
@@ -128,7 +137,7 @@ const UserInfo = () => {
 			</div>
 
 			<button className='btn btn-dark w-100' type='submit'>
-				Update
+				업데이트
 			</button>
 		</form>
 	);

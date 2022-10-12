@@ -144,7 +144,7 @@ const authController = {
 					account: email,
 					password: passwordHash,
 					avatar: picture,
-					type: 'login',
+					type: 'google',
 				};
 				registerUser(user, res);
 			}
@@ -179,7 +179,7 @@ const authController = {
 					name: phone,
 					account: phone,
 					password: passwordHash,
-					type: 'login',
+					type: 'sms',
 				};
 				registerUser(user, res);
 			}
@@ -191,8 +191,13 @@ const authController = {
 
 const loginUser = async (user: IUser, password: string, res: Response) => {
 	const isMatch = await bcrypt.compare(password, user.password);
-	if (!isMatch)
-		return res.status(500).json({ message: '패스워드가 맞지 않습니다.' });
+	if (!isMatch) {
+		let msgError =
+			user.type === 'register'
+				? '패스워드가 맞지 않습니다.'
+				: `패스워드가 맞지 않습니다. 이 계정은 ${user.type}로 로그인 하세요. `;
+		return res.status(400).json({ message: msgError });
+	}
 	const access_token = generateAccessToken({ id: user._id });
 	const refresh_token = generateRefreshToken({ id: user._id });
 

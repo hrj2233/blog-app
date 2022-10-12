@@ -22,10 +22,21 @@ export const validRegister = (userRegister: IUserRegister) => {
 		errors.push('비밀번호가 일치하지 않습니다.');
 	}
 
+	const message = checkPassword(password, cf_password);
+	if (message) errors.push(message);
+
 	return {
 		errMessage: errors,
 		errLength: errors.length,
 	};
+};
+
+export const checkPassword = (password: string, cf_password: string) => {
+	if (password.length < 6) {
+		return '비밀번호는 적어도 6글자 이상이어야 합니다.';
+	} else if (password !== cf_password) {
+		return '비밀번호가 일치하지 않습니다.';
+	}
 };
 
 export const validatePhone = (phone: string) => {
