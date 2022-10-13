@@ -8,9 +8,7 @@ const alertSlice = createSlice({
 	initialState,
 	reducers: {
 		getAlert(state, action) {
-			state.loading = action.payload.loading;
-			state.success = action.payload.success;
-			state.errors = action.payload.errors;
+			return action.payload;
 		},
 	},
 });

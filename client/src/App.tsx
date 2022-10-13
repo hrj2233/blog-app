@@ -7,12 +7,14 @@ import Home from './pages/home';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { refreshToken } from './redux/actions/authAction';
+import { getCategories } from './redux/actions/categoryAction';
 
 const App = () => {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
 		dispatch(refreshToken());
+		dispatch(getCategories());
 	}, [dispatch]);
 
 	return (

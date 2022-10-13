@@ -1,4 +1,4 @@
-import { Dispatch } from 'react';
+import { Dispatch } from 'redux';
 import { alertActions } from '../reducers/alertReducer';
 import { IAlertType } from '../types/alertType';
 import { IAuth, IAuthType } from '../types/authType';

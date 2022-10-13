@@ -32,3 +32,10 @@ export interface IAlert {
 export interface IUserProfile extends IUserRegister {
 	avatar: string | File;
 }
+
+export interface ICategory {
+	_id: string;
+	name: string;
+	createdAt: string;
+	updatedAt: string;
+}
