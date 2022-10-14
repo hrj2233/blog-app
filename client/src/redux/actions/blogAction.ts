@@ -3,6 +3,7 @@ import { IBlog } from '../../utils/types';
 import { imageUpload } from '../../utils/imageUpload';
 import { IAlertType } from '../types/alertType';
 import { alertActions } from '../reducers/alertReducer';
+import { postAPI } from '../../utils/fetchData';
 
 export const createBlog: any =
 	(blog: IBlog, token: string) => async (dispatch: Dispatch<IAlertType>) => {
@@ -18,6 +19,8 @@ export const createBlog: any =
 			}
 
 			const newBlog = { ...blog, thumbnail: url };
+			const res = await postAPI('blog', newBlog, token);
+
 			dispatch(alertActions.getAlert({ loading: false }));
 		} catch (err: any) {
 			dispatch(alertActions.getAlert({ errors: err.response.data.message }));
