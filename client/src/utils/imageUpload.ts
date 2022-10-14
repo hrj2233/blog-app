@@ -1,4 +1,5 @@
 export const checkImage = (file: File) => {
+	const types = ['image/png', 'image/jpeg'];
 	let err = '';
 	if (!file) return (err = '파일이 존재하지 않습니다.');
 
@@ -6,6 +7,7 @@ export const checkImage = (file: File) => {
 		// 1mb
 		err = '최대 이미지 사이즈는 1mb 입니다.';
 
+	if (!types.includes(file.type)) err = '이미지 형식은 png/jpeg입니다.';
 	return err;
 };
 

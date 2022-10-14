@@ -1,4 +1,4 @@
-import { IUserRegister } from './types';
+import { IBlog, IUserRegister } from './types';
 
 export const validRegister = (userRegister: IUserRegister) => {
 	const { name, account, password, cf_password } = userRegister;
@@ -48,4 +48,44 @@ export const validateEmail = (email: string) => {
 	const re =
 		/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 	return re.test(String(email).toLowerCase());
+};
+
+// Valid Blog
+export const validCreateBlog = ({
+	title,
+	content,
+	description,
+	thumbnail,
+	category,
+}: IBlog) => {
+	const err: string[] = [];
+
+	if (title.trim().length < 10) {
+		err.push('제목은 10자 이상이어야 합니다.');
+	} else if (title.trim().length > 50) {
+		err.push('제목은 최대 50자입니다.');
+	}
+
+	if (content.trim().length < 2000) {
+		err.push('콘텐츠는 2000자 이상이어야 합니다.');
+	}
+
+	if (description.trim().length < 50) {
+		err.push('설명은 50자 이상이어야 합니다.');
+	} else if (description.trim().length > 200) {
+		err.push('설명은 최대 200자입니다.');
+	}
+
+	if (!thumbnail) {
+		err.push('썸네일은 비워둘 수 없습니다.');
+	}
+
+	if (!category) {
+		err.push('카테고리는 비워둘 수 없습니다.');
+	}
+
+	return {
+		errMsg: err,
+		errLength: err.length,
+	};
 };

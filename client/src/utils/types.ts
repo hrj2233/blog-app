@@ -1,6 +1,8 @@
 import { ChangeEvent } from 'react';
 
-export type InputChange = ChangeEvent<HTMLInputElement>;
+export type InputChange = ChangeEvent<
+	HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+>;
 export type FormSubmit = ChangeEvent<HTMLFormElement>;
 
 export interface IUserLogin {
@@ -38,4 +40,15 @@ export interface ICategory {
 	name: string;
 	createdAt: string;
 	updatedAt: string;
+}
+
+export interface IBlog {
+	_id?: string;
+	user: string | IUser;
+	title: string;
+	content: string;
+	description: string;
+	thumbnail: string | File;
+	category: string;
+	createdAt: string;
 }
