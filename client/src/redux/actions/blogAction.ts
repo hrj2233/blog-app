@@ -4,8 +4,13 @@ import { imageUpload } from '../../utils/imageUpload';
 import { IAlertType } from '../types/alertType';
 import { alertActions } from '../reducers/alertReducer';
 import { getAPI, postAPI } from '../../utils/fetchData';
-import { IGetHomeBlogsType } from '../types/blogType';
+import {
+	IBlogsCategory,
+	IGetBlogsCategoryType,
+	IGetHomeBlogsType,
+} from '../types/blogType';
 import { homeBlogsAction } from '../reducers/homeBlogsReducer';
+import { blogsCategoryAction } from '../reducers/blogsCategoryReducer';
 
 export const createBlog: any =
 	(blog: IBlog, token: string) => async (dispatch: Dispatch<IAlertType>) => {
@@ -36,6 +41,22 @@ export const getHomeBlogs: any =
 			const res = await getAPI('home/blogs');
 
 			dispatch(homeBlogsAction.getHomeBlogs(res.data));
+			dispatch(alertActions.getAlert({ loading: false }));
+		} catch (err: any) {
+			dispatch(alertActions.getAlert({ errors: err.response.data.message }));
+		}
+	};
+
+export const getBlogsByCategoryId: any =
+	(id: string) =>
+	async (dispatch: Dispatch<IAlertType | IGetBlogsCategoryType>) => {
+		try {
+			dispatch(alertActions.getAlert({ loading: true }));
+
+			const res = await getAPI(`blogs/${id}`);
+			console.log({ ...res.data, id });
+			dispatch(blogsCategoryAction.getBlogsCategoryId({ ...res.data, id }));
+
 			dispatch(alertActions.getAlert({ loading: false }));
 		} catch (err: any) {
 			dispatch(alertActions.getAlert({ errors: err.response.data.message }));

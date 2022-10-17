@@ -3,7 +3,8 @@ import { useParams } from 'react-router-dom';
 import NotFound from './components/global/NotFound';
 
 const generatePage = (name: string) => {
-	const component = () => require(`./pages/${name}`).default;
+	const routes = name === 'home' ? '/' : name === '/' ? '' : name;
+	const component = () => require(`./pages/${routes}`).default;
 
 	try {
 		return React.createElement(component());
