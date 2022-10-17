@@ -4,11 +4,7 @@ import { imageUpload } from '../../utils/imageUpload';
 import { IAlertType } from '../types/alertType';
 import { alertActions } from '../reducers/alertReducer';
 import { getAPI, postAPI } from '../../utils/fetchData';
-import {
-	IBlogsCategory,
-	IGetBlogsCategoryType,
-	IGetHomeBlogsType,
-} from '../types/blogType';
+import { IGetBlogsCategoryType, IGetHomeBlogsType } from '../types/blogType';
 import { homeBlogsAction } from '../reducers/homeBlogsReducer';
 import { blogsCategoryAction } from '../reducers/blogsCategoryReducer';
 
@@ -48,14 +44,17 @@ export const getHomeBlogs: any =
 	};
 
 export const getBlogsByCategoryId: any =
-	(id: string) =>
+	(id: string, search: string) =>
 	async (dispatch: Dispatch<IAlertType | IGetBlogsCategoryType>) => {
 		try {
+			let limit = 8;
+			let value = search ? search : `?page=${1}`;
 			dispatch(alertActions.getAlert({ loading: true }));
 
-			const res = await getAPI(`blogs/${id}`);
-			console.log({ ...res.data, id });
-			dispatch(blogsCategoryAction.getBlogsCategoryId({ ...res.data, id }));
+			const res = await getAPI(`blogs/${id}${value}&limit=${limit}`);
+			dispatch(
+				blogsCategoryAction.getBlogsCategoryId({ ...res.data, id, search })
+			);
 
 			dispatch(alertActions.getAlert({ loading: false }));
 		} catch (err: any) {
