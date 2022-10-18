@@ -32,7 +32,7 @@ const Home = () => {
 
 					{homeBlog.count > 4 && (
 						<Link
-							className='text-end d-block mt-2 mb-3'
+							className='text-end d-block mt-2 mb-3 text-decoration-none'
 							to={`/blogs/${homeBlog.name}`}
 						>
 							더보기 &gt;&gt;

@@ -8,7 +8,6 @@ import { authActions } from '../reducers/authReducer';
 import { checkPassword } from '../../utils/valid';
 import { IGetOtherInfoType } from '../types/profileType';
 import { otherInfoAction } from '../reducers/otherInfoReducer';
-import { IUser } from '../../utils/types';
 
 export const updateUser: any =
 	(avatar: File, name: string, auth: IAuth) =>
