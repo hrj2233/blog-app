@@ -3,9 +3,12 @@ import { alertActions } from '../reducers/alertReducer';
 import { IAlertType } from '../types/alertType';
 import { IAuth, IAuthType } from '../types/authType';
 import { checkImage, imageUpload } from '../../utils/imageUpload';
-import { patchAPI } from '../../utils/fetchData';
+import { patchAPI, getAPI } from '../../utils/fetchData';
 import { authActions } from '../reducers/authReducer';
 import { checkPassword } from '../../utils/valid';
+import { IGetOtherInfoType } from '../types/profileType';
+import { otherInfoAction } from '../reducers/otherInfoReducer';
+import { IUser } from '../../utils/types';
 
 export const updateUser: any =
 	(avatar: File, name: string, auth: IAuth) =>
@@ -54,6 +57,19 @@ export const resetPassword: any =
 			dispatch(alertActions.getAlert({ loading: true }));
 			const res = await patchAPI('reset_password', { password }, token);
 			dispatch(alertActions.getAlert({ success: res.data.message }));
+		} catch (err: any) {
+			dispatch(alertActions.getAlert({ errors: err.response.data.message }));
+		}
+	};
+
+export const getOtherInfo: any =
+	(id: string) =>
+	async (dispatch: Dispatch<IAlertType | IGetOtherInfoType>) => {
+		try {
+			dispatch(alertActions.getAlert({ loading: true }));
+			const res = await getAPI(`user/${id}`);
+			dispatch(otherInfoAction.getOtherInfo(res.data));
+			dispatch(alertActions.getAlert({}));
 		} catch (err: any) {
 			dispatch(alertActions.getAlert({ errors: err.response.data.message }));
 		}

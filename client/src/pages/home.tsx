@@ -35,7 +35,7 @@ const Home = () => {
 							className='text-end d-block mt-2 mb-3'
 							to={`/blogs/${homeBlog.name}`}
 						>
-							Read more &gt;&gt;
+							더보기 &gt;&gt;
 						</Link>
 					)}
 				</div>

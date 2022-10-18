@@ -50,8 +50,9 @@ export const getBlogsByCategoryId: any =
 			let limit = 8;
 			let value = search ? search : `?page=${1}`;
 			dispatch(alertActions.getAlert({ loading: true }));
-
+			console.log(search);
 			const res = await getAPI(`blogs/${id}${value}&limit=${limit}`);
+			console.log(res.data);
 			dispatch(
 				blogsCategoryAction.getBlogsCategoryId({ ...res.data, id, search })
 			);

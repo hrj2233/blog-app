@@ -23,7 +23,7 @@ const BlogsByCategory = () => {
 	const [total, setTotal] = useState(0);
 
 	const navigate = useNavigate();
-	const { search } = useLocation().search;
+	const { search } = useLocation();
 
 	useEffect(() => {
 		const category = categories.find((item) => item.name === slug);

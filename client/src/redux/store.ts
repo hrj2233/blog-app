@@ -4,6 +4,7 @@ import authReducer from './reducers/authReducer';
 import blogsCategoryReducer from './reducers/blogsCategoryReducer';
 import categoryReducer from './reducers/categoryReducer';
 import homeBlogsReducer from './reducers/homeBlogsReducer';
+import otherInfoReducer from './reducers/otherInfoReducer';
 
 const store = configureStore({
 	reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
 		categories: categoryReducer,
 		homeBlogs: homeBlogsReducer,
 		blogsCategory: blogsCategoryReducer,
+		otherInfo: otherInfoReducer,
 	},
 });
 
