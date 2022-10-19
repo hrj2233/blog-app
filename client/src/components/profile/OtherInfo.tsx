@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getOtherInfo } from '../../redux/actions/profileAction';
+import { getOtherInfo } from '../../redux/actions/userAction';
 import { RootState } from '../../redux/store';
 import { IUser } from '../../utils/types';
 import Loading from '../global/Loading';

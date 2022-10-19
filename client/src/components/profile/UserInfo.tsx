@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { resetPassword, updateUser } from '../../redux/actions/profileAction';
+import { resetPassword, updateUser } from '../../redux/actions/userAction';
 import { RootState } from '../../redux/store';
 import { FormSubmit, InputChange, IUserProfile } from '../../utils/types';
 import NotFound from '../global/NotFound';
