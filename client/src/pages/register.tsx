@@ -1,7 +1,9 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import RegisterForm from '../components/auth/RegisterForm';
 
 const Register = () => {
+	const location = useLocation();
+
 	return (
 		<div className='auth_page'>
 			<div className='auth_box'>
@@ -9,7 +11,7 @@ const Register = () => {
 				<RegisterForm />
 				<p className='mt-2'>
 					{`이미 계정이 있으신가요? `}
-					<Link to='/login' style={{ color: 'crimson' }}>
+					<Link to={`/login${location.search}`} style={{ color: 'crimson' }}>
 						로그인 하기
 					</Link>
 				</p>

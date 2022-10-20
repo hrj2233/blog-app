@@ -4,6 +4,7 @@ import authReducer from './reducers/authReducer';
 import blogsCategoryReducer from './reducers/blogsCategoryReducer';
 import blogsUserReducer from './reducers/blogsUserReducer';
 import categoryReducer from './reducers/categoryReducer';
+import commentReducer from './reducers/commentReducer';
 import homeBlogsReducer from './reducers/homeBlogsReducer';
 import otherInfoReducer from './reducers/otherInfoReducer';
 
@@ -16,6 +17,7 @@ const store = configureStore({
 		blogsCategory: blogsCategoryReducer,
 		otherInfo: otherInfoReducer,
 		blogsUser: blogsUserReducer,
+		comments: commentReducer,
 	},
 });
 

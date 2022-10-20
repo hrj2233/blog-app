@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import LoginPass from '../components/auth/LoginPass';
 import LoginSMS from '../components/auth/LoginSMS';
 import { RootState } from '../redux/store';
@@ -9,11 +9,14 @@ import SocialLogin from '../components/auth/SocialLogin';
 const Login = () => {
 	const [sms, setSms] = useState(false);
 	const navigate = useNavigate();
-
+	const location = useLocation();
 	const { auth } = useSelector((state: RootState) => state);
 
 	useEffect(() => {
-		if (auth.access_token) navigate('/');
+		if (auth.access_token) {
+			let url = location.search.replace('?', '/');
+			return location.search === '' ? navigate('/') : navigate(url);
+		}
 	}, [auth.access_token, navigate]);
 
 	return (
@@ -34,7 +37,7 @@ const Login = () => {
 				</small>
 				<p>
 					계정이 없으신가요?
-					<Link to={`/register`} style={{ color: 'crimson' }}>
+					<Link to={`/register${location.search}`} style={{ color: 'crimson' }}>
 						{` 계정 만들기`}
 					</Link>
 				</p>
