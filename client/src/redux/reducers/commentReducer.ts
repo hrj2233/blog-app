@@ -19,6 +19,19 @@ const commentSlice = createSlice({
 		getComments(state, action) {
 			return action.payload;
 		},
+		replyComment(state, action) {
+			return {
+				...state,
+				data: state.data.map((item) =>
+					item._id === action.payload.comment_root
+						? {
+								...item,
+								replyCM: [...(item.replyCM as []), action.payload],
+						  }
+						: item
+				),
+			};
+		},
 	},
 });
 

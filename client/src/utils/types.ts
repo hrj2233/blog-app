@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react';
+import React, { ChangeEvent } from 'react';
 
 export type InputChange = ChangeEvent<
 	HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -25,14 +25,14 @@ export interface IUser extends IUserLogin {
 	_id: string;
 }
 
+export interface IUserProfile extends IUserRegister {
+	avatar: string | File;
+}
+
 export interface IAlert {
 	loading?: boolean;
 	success?: string | string[];
 	errors?: string | string[];
-}
-
-export interface IUserProfile extends IUserRegister {
-	avatar: string | File;
 }
 
 export interface ICategory {
@@ -60,6 +60,7 @@ export interface IComment {
 	blog_user_id: string;
 	content: string;
 	replyCM?: IComment[];
-	reply_user?: string;
+	reply_user?: IUser;
+	comment_root?: string;
 	createdAt: string;
 }
