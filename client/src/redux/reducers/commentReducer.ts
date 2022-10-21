@@ -32,6 +32,29 @@ const commentSlice = createSlice({
 				),
 			};
 		},
+		updateComment(state, action) {
+			return {
+				...state,
+				data: state.data.map((item) =>
+					item._id === action.payload._id ? action.payload : item
+				),
+			};
+		},
+		updateReply(state, action) {
+			return {
+				...state,
+				data: state.data.map((item) =>
+					item._id === action.payload.comment_root
+						? {
+								...item,
+								replyCM: item.replyCM?.map((rp) =>
+									rp._id === action.payload._id ? action.payload : rp
+								),
+						  }
+						: item
+				),
+			};
+		},
 	},
 });
 

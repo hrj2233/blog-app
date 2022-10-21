@@ -8,6 +8,7 @@ import {
 	ICreateCommentType,
 	IGetCommentsType,
 	IReplyCommentType,
+	IUpdateType,
 } from '../types/commentType';
 
 export const createComment: any =
@@ -52,6 +53,18 @@ export const replyComment: any =
 					reply_user: data.reply_user,
 				})
 			);
+		} catch (err: any) {
+			dispatch(alertActions.getAlert({ errors: err.response.data.message }));
+		}
+	};
+
+export const updateComment: any =
+	(data: IComment, token: string) =>
+	async (dispatch: Dispatch<IAlertType | IUpdateType>) => {
+		try {
+			data.comment_root
+				? dispatch(commentAction.updateReply(data))
+				: dispatch(commentAction.updateComment(data));
 		} catch (err: any) {
 			dispatch(alertActions.getAlert({ errors: err.response.data.message }));
 		}
