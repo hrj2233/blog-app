@@ -71,6 +71,7 @@ export const logout: any =
 	() => async (dispatch: Dispatch<IAuthType | IAlertType>) => {
 		try {
 			localStorage.removeItem('logged');
+			dispatch(alertActions.getAlert({}));
 			await getAPI('logout');
 			window.location.href = '/';
 		} catch (err: any) {
