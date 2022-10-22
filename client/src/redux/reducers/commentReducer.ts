@@ -55,6 +55,27 @@ const commentSlice = createSlice({
 				),
 			};
 		},
+		deleteComment(state, action) {
+			return {
+				...state,
+				data: state.data.filter((item) => item._id !== action.payload._id),
+			};
+		},
+		deleteReply(state, action) {
+			return {
+				...state,
+				data: state.data.map((item) =>
+					item._id === action.payload.comment_root
+						? {
+								...item,
+								replyCM: item.replyCM?.filter(
+									(rp) => rp._id !== action.payload._id
+								),
+						  }
+						: item
+				),
+			};
+		},
 	},
 });
 

@@ -165,6 +165,60 @@ const commentController = {
 			return res.status(500).json({ message: err.message });
 		}
 	},
+	updateComment: async (req: IReqAuth, res: Response) => {
+		if (!req.user)
+			return res.status(400).json({ message: '잘못된 인증입니다.' });
+
+		try {
+			const { content } = req.body;
+
+			const comment = await Comments.findOneAndUpdate(
+				{
+					_id: req.params.id,
+					user: req.user.id,
+				},
+				{ content }
+			);
+
+			if (!comment)
+				return res.status(400).json({ message: '댓글이 존재하지 않습니다.' });
+
+			return res.json({ message: '업데이트 성공!' });
+		} catch (err: any) {
+			return res.status(500).json({ message: err.message });
+		}
+	},
+	deleteComment: async (req: IReqAuth, res: Response) => {
+		if (!req.user)
+			return res.status(400).json({ message: '잘못된 인증입니다.' });
+
+		try {
+			const comment = await Comments.findOneAndDelete({
+				_id: req.params.id,
+				$or: [{ user: req.user._id }, { blog_user_id: req.user._id }],
+			});
+
+			if (!comment)
+				return res.status(400).json({ message: '댓글은 존재하지 않습니다.' });
+
+			if (comment.comment_root) {
+				// update replyCM
+				await Comments.findOneAndUpdate(
+					{ _id: comment.comment_root },
+					{
+						$pull: { replyCM: comment._id },
+					}
+				);
+			} else {
+				// delete all comments in replyCM
+				await Comments.deleteMany({ _id: { $in: comment.replyCM } });
+			}
+
+			return res.json({ message: '삭제 성공!' });
+		} catch (err: any) {
+			return res.status(500).json({ message: err.message });
+		}
+	},
 };
 
 export default commentController;

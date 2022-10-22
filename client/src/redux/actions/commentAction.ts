@@ -1,11 +1,12 @@
 import { Dispatch } from 'redux';
-import { getAPI, postAPI } from '../../utils/fetchData';
+import { deleteAPI, getAPI, patchAPI, postAPI } from '../../utils/fetchData';
 import { IComment } from '../../utils/types';
 import { alertActions } from '../reducers/alertReducer';
 import { commentAction } from '../reducers/commentReducer';
 import { IAlertType } from '../types/alertType';
 import {
 	ICreateCommentType,
+	IDeleteType,
 	IGetCommentsType,
 	IReplyCommentType,
 	IUpdateType,
@@ -65,6 +66,21 @@ export const updateComment: any =
 			data.comment_root
 				? dispatch(commentAction.updateReply(data))
 				: dispatch(commentAction.updateComment(data));
+			await patchAPI(`comment/${data._id}`, { content: data.content }, token);
+		} catch (err: any) {
+			dispatch(alertActions.getAlert({ errors: err.response.data.message }));
+		}
+	};
+
+export const deleteComment: any =
+	(data: IComment, token: string) =>
+	async (dispatch: Dispatch<IAlertType | IDeleteType>) => {
+		try {
+			data.comment_root
+				? dispatch(commentAction.deleteReply(data))
+				: dispatch(commentAction.deleteComment(data));
+
+			await deleteAPI(`comment/${data._id}`, token);
 		} catch (err: any) {
 			dispatch(alertActions.getAlert({ errors: err.response.data.message }));
 		}
