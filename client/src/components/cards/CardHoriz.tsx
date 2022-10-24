@@ -1,6 +1,8 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
+import { deleteBlog } from '../../redux/actions/blogAction';
+import { alertActions } from '../../redux/reducers/alertReducer';
 import { RootState } from '../../redux/store';
 import { IBlog, IUser } from '../../utils/types';
 
@@ -11,6 +13,18 @@ interface IProps {
 const CardHoriz: React.FC<IProps> = ({ blog }) => {
 	const { slug } = useParams();
 	const { auth } = useSelector((state: RootState) => state);
+	const dispatch = useDispatch();
+
+	const handleDelete = () => {
+		if (!auth.user || !auth.access_token) return;
+
+		if (slug !== auth.user._id)
+			return dispatch(alertActions.getAlert({ errors: '잘못된 인증입니다.' }));
+
+		if (window.confirm('이 게시물을 삭제하시겠습니까?')) {
+			dispatch(deleteBlog(blog, auth.access_token));
+		}
+	};
 
 	return (
 		<div className='card mb-3' style={{ minWidth: '280px' }}>
@@ -58,16 +72,27 @@ const CardHoriz: React.FC<IProps> = ({ blog }) => {
 						</h5>
 						<p className='card-text'>{blog.description}</p>
 						{blog.title && (
-							<p className='card-text d-flex justify-content-between'>
-								{slug && (blog.user as IUser)._id === auth.user?._id && (
-									<small>
-										<Link to={`/update_blog/${blog._id}`}>업데이트</Link>
-									</small>
+							<div
+								className='card-text d-flex justify-content-between
+							align-items-center'
+							>
+								{slug === auth.user?._id && (
+									<div style={{ cursor: 'pointer' }}>
+										<Link to={`/update_blog/${blog._id}`}>
+											<i className='fas fa-edit' title='edit' />
+										</Link>
+
+										<i
+											className='fas fa-trash text-danger mx-3'
+											title='edit'
+											onClick={handleDelete}
+										/>
+									</div>
 								)}
 								<small className='text-muted'>
 									{new Date(blog.createdAt).toLocaleString()}
 								</small>
-							</p>
+							</div>
 						)}
 					</div>
 				</div>

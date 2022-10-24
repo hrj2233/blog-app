@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import Blogs from '../models/Blog';
 import { IReqAuth } from '../config/interface';
+import Comments from '../models/Comment';
 import mongoose from 'mongoose';
 
 const Pagination = (req: IReqAuth) => {
@@ -28,7 +29,10 @@ const blogController = {
 			});
 
 			await newBlog.save();
-			res.json({ newBlog });
+			res.json({
+				...newBlog._doc,
+				user: req.user,
+			});
 		} catch (err: any) {
 			return res.status(500).json({ message: err.message });
 		}
@@ -251,6 +255,27 @@ const blogController = {
 			if (!blog) return res.status(400).json({ message: '잘못된 인증입니다.' });
 
 			res.json({ message: '업데이트 성공!', blog });
+		} catch (err: any) {
+			return res.status(500).json({ message: err.message });
+		}
+	},
+	deleteBlog: async (req: IReqAuth, res: Response) => {
+		if (!req.user)
+			return res.status(400).json({ message: '잘못된 인증입니다.' });
+
+		try {
+			// Delete Blog
+			const blog = await Blogs.findOneAndDelete({
+				_id: req.params.id,
+				user: req.user._id,
+			});
+
+			if (!blog) return res.status(400).json({ message: '잘못된 인증입니다.' });
+
+			// Delete Comments
+			await Comments.deleteMany({ blog_id: blog._id });
+
+			res.json({ message: '삭제 성공!' });
 		} catch (err: any) {
 			return res.status(500).json({ message: err.message });
 		}

@@ -3,8 +3,10 @@ import { IBlog } from '../../utils/types';
 import { imageUpload } from '../../utils/imageUpload';
 import { IAlertType } from '../types/alertType';
 import { alertActions } from '../reducers/alertReducer';
-import { getAPI, postAPI, putAPI } from '../../utils/fetchData';
+import { deleteAPI, getAPI, postAPI, putAPI } from '../../utils/fetchData';
 import {
+	ICreateBlogsUserType,
+	IDeleteBlogsUserType,
 	IGetBlogsCategoryType,
 	IGetBlogsUserType,
 	IGetHomeBlogsType,
@@ -14,7 +16,8 @@ import { blogsCategoryAction } from '../reducers/blogsCategoryReducer';
 import { blogsUserAction } from '../reducers/blogsUserReducer';
 
 export const createBlog: any =
-	(blog: IBlog, token: string) => async (dispatch: Dispatch<IAlertType>) => {
+	(blog: IBlog, token: string) =>
+	async (dispatch: Dispatch<IAlertType | ICreateBlogsUserType>) => {
 		let url;
 		try {
 			dispatch(alertActions.getAlert({ loading: true }));
@@ -28,6 +31,8 @@ export const createBlog: any =
 
 			const newBlog = { ...blog, thumbnail: url };
 			const res = await postAPI('blog', newBlog, token);
+
+			dispatch(blogsUserAction.createBlogsUserId(res.data));
 
 			dispatch(alertActions.getAlert({ loading: false }));
 		} catch (err: any) {
@@ -103,6 +108,17 @@ export const updateBlog: any =
 			const res = await putAPI(`blog/${newBlog._id}`, newBlog, token);
 
 			dispatch(alertActions.getAlert({ success: res.data.message }));
+		} catch (err: any) {
+			dispatch(alertActions.getAlert({ errors: err.response.data.message }));
+		}
+	};
+
+export const deleteBlog: any =
+	(blog: IBlog, token: string) =>
+	async (dispatch: Dispatch<IAlertType | IDeleteBlogsUserType>) => {
+		try {
+			dispatch(blogsUserAction.deleteBlogsUserId(blog));
+			await deleteAPI(`blog/${blog._id}`, token);
 		} catch (err: any) {
 			dispatch(alertActions.getAlert({ errors: err.response.data.message }));
 		}

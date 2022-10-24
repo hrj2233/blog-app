@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { IBlog } from '../config/interface';
 
 const blogSchema = new mongoose.Schema(
 	{
@@ -31,4 +32,4 @@ const blogSchema = new mongoose.Schema(
 	{ timestamps: true }
 );
 
-export default mongoose.model('blog', blogSchema);
+export default mongoose.model<IBlog>('blog', blogSchema);
