@@ -280,6 +280,38 @@ const blogController = {
 			return res.status(500).json({ message: err.message });
 		}
 	},
+	searchBlogs: async (req: Request, res: Response) => {
+		try {
+			const blogs = await Blogs.aggregate([
+				{
+					$search: {
+						index: 'searchTitle',
+						autocomplete: {
+							query: `${req.query.title}`,
+							path: 'title',
+						},
+					},
+				},
+				{ $sort: { createdAt: -1 } },
+				{ $limit: 5 },
+				{
+					$project: {
+						title: 1,
+						description: 1,
+						thumbnail: 1,
+						createdAt: 1,
+					},
+				},
+			]);
+
+			if (!blogs.length)
+				return res.status(400).json({ message: '블로그 없음.' });
+
+			res.json(blogs);
+		} catch (err: any) {
+			return res.status(500).json({ message: err.message });
+		}
+	},
 };
 
 export default blogController;
