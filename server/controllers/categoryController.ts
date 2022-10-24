@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { IReqAuth } from '../config/interface';
 import Categories from '../models/Category';
+import Blogs from '../models/Blog';
 
 const categoryController = {
 	getCategories: async (req: Request, res: Response) => {
@@ -61,7 +62,17 @@ const categoryController = {
 			return res.status(400).json({ message: '잘못된 인증입니다.' });
 
 		try {
+			const blog = await Blogs.findOne({ category: req.params.id });
+			if (blog)
+				return res.status(400).json({
+					msg: '삭제할 수 없습니다! 이 카테고리에 블로그가 존재합니다.',
+				});
+
 			const category = await Categories.findByIdAndDelete(req.params.id);
+			if (!category)
+				return res
+					.status(400)
+					.json({ message: '카테고리가 존재하지 않습니다.' });
 			res.json({ message: '삭제 성공!' });
 		} catch (err: any) {
 			return res.status(500).json({ message: err.message });

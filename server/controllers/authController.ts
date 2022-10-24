@@ -15,6 +15,7 @@ import {
 	IUser,
 	IGgPayload,
 	IUserParams,
+	IReqAuth,
 } from '../config/interface';
 import { OAuth2Client } from 'google-auth-library';
 
@@ -89,9 +90,16 @@ const authController = {
 			return res.status(500).json({ message: err.message });
 		}
 	},
-	logout: async (req: Request, res: Response) => {
+	logout: async (req: IReqAuth, res: Response) => {
+		if (!req.user) return res.status(400).json({ msg: '잘못된 인증입니다.' });
 		try {
 			res.clearCookie('refreshtoken', { path: `/api/refresh_token` });
+			await Users.findOneAndUpdate(
+				{ _id: req.user._id },
+				{
+					rf_token: '',
+				}
+			);
 			return res.json({ message: '로그아웃!' });
 		} catch (err: any) {
 			return res.status(500).json({ message: err.message });
@@ -107,12 +115,24 @@ const authController = {
 			);
 			if (!decoded)
 				return res.status(400).json({ message: '지금 로그인 하세요!' });
-			const user = await Users.findById(decoded.id).select('-password');
+			const user = await Users.findById(decoded.id).select(
+				'-password +rf_token'
+			);
 			if (!user)
 				return res
 					.status(400)
 					.json({ message: '이 계정은 존재하지 않습니다.' });
+			if (rf_token !== user.rf_token)
+				return res.status(400).json({ msg: '지금 로그인 하세요!' });
 			const access_token = generateAccessToken({ id: user._id });
+			const refresh_token = generateRefreshToken({ id: user._id }, res);
+
+			await Users.findOneAndUpdate(
+				{ _id: user._id },
+				{
+					rf_token: refresh_token,
+				}
+			);
 			res.json({ access_token, user });
 		} catch (err: any) {
 			return res.status(500).json({ message: err.message });
@@ -199,13 +219,14 @@ const loginUser = async (user: IUser, password: string, res: Response) => {
 		return res.status(400).json({ message: msgError });
 	}
 	const access_token = generateAccessToken({ id: user._id });
-	const refresh_token = generateRefreshToken({ id: user._id });
+	const refresh_token = generateRefreshToken({ id: user._id }, res);
 
-	res.cookie('refreshtoken', refresh_token, {
-		httpOnly: true,
-		path: `/api/refresh_token`,
-		maxAge: 30 * 24 * 60 * 60 * 1000, // 30days
-	});
+	await Users.findOneAndUpdate(
+		{ _id: user._id },
+		{
+			rf_token: refresh_token,
+		}
+	);
 
 	res.json({
 		message: '로그인 성공!',
@@ -219,13 +240,10 @@ const registerUser = async (user: IUserParams, res: Response) => {
 	await newUser.save();
 
 	const access_token = generateAccessToken({ id: newUser._id });
-	const refresh_token = generateRefreshToken({ id: newUser._id });
+	const refresh_token = generateRefreshToken({ id: newUser._id }, res);
 
-	res.cookie('refreshtoken', refresh_token, {
-		httpOnly: true,
-		path: `/api/refresh_token`,
-		maxAge: 30 * 24 * 60 * 60 * 1000, // 30days
-	});
+	newUser.rf_token = refresh_token;
+	await newUser.save();
 
 	res.json({
 		msg: '로그인 성공!',

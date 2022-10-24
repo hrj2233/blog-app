@@ -8,6 +8,7 @@ import { getAPI, postAPI } from '../../utils/fetchData';
 import { authActions } from '../reducers/authReducer';
 import { alertActions } from '../reducers/alertReducer';
 import { validatePhone, validRegister } from '../../utils/valid';
+import { checkTokenExp } from '../../utils/checkTokenExp';
 
 export const login: any =
 	(userLogin: IUserLogin) =>
@@ -68,11 +69,14 @@ export const refreshToken: any =
 	};
 
 export const logout: any =
-	() => async (dispatch: Dispatch<IAuthType | IAlertType>) => {
+	(token: string) => async (dispatch: Dispatch<IAuthType | IAlertType>) => {
+		const result = await checkTokenExp(token, dispatch);
+		const access_token = result ? result : token;
+
 		try {
 			localStorage.removeItem('logged');
 			dispatch(alertActions.getAlert({}));
-			await getAPI('logout');
+			await getAPI('logout', access_token);
 			window.location.href = '/';
 		} catch (err: any) {
 			dispatch(alertActions.getAlert({ errors: err.response.data.message }));

@@ -8,11 +8,14 @@ import { authActions } from '../reducers/authReducer';
 import { checkPassword } from '../../utils/valid';
 import { IGetOtherInfoType } from '../types/profileType';
 import { otherInfoAction } from '../reducers/otherInfoReducer';
+import { checkTokenExp } from '../../utils/checkTokenExp';
 
 export const updateUser: any =
 	(avatar: File, name: string, auth: IAuth) =>
 	async (dispatch: Dispatch<IAlertType | IAuthType>) => {
 		if (!auth.access_token || !auth.user) return;
+		const result = await checkTokenExp(auth.access_token, dispatch);
+		const access_token = result ? result : auth.access_token;
 
 		let url = '';
 		try {
@@ -39,7 +42,7 @@ export const updateUser: any =
 					avatar: url ? url : auth.user.avatar,
 					name: name ? name : auth.user.name,
 				},
-				auth.access_token
+				access_token
 			);
 			dispatch(alertActions.getAlert({ success: res.data.message }));
 		} catch (err: any) {
@@ -50,11 +53,14 @@ export const updateUser: any =
 export const resetPassword: any =
 	(password: string, cf_password: string, token: string) =>
 	async (dispatch: Dispatch<IAlertType | IAuthType>) => {
+		const result = await checkTokenExp(token, dispatch);
+		const access_token = result ? result : token;
+
 		const message = checkPassword(password, cf_password);
 		if (message) return dispatch(alertActions.getAlert({ errors: message }));
 		try {
 			dispatch(alertActions.getAlert({ loading: true }));
-			const res = await patchAPI('reset_password', { password }, token);
+			const res = await patchAPI('reset_password', { password }, access_token);
 			dispatch(alertActions.getAlert({ success: res.data.message }));
 		} catch (err: any) {
 			dispatch(alertActions.getAlert({ errors: err.response.data.message }));

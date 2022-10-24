@@ -14,10 +14,14 @@ import {
 import { homeBlogsAction } from '../reducers/homeBlogsReducer';
 import { blogsCategoryAction } from '../reducers/blogsCategoryReducer';
 import { blogsUserAction } from '../reducers/blogsUserReducer';
+import { checkTokenExp } from '../../utils/checkTokenExp';
 
 export const createBlog: any =
 	(blog: IBlog, token: string) =>
 	async (dispatch: Dispatch<IAlertType | ICreateBlogsUserType>) => {
+		const result = await checkTokenExp(token, dispatch);
+		const access_token = result ? result : token;
+
 		let url;
 		try {
 			dispatch(alertActions.getAlert({ loading: true }));
@@ -30,7 +34,7 @@ export const createBlog: any =
 			}
 
 			const newBlog = { ...blog, thumbnail: url };
-			const res = await postAPI('blog', newBlog, token);
+			const res = await postAPI('blog', newBlog, access_token);
 
 			dispatch(blogsUserAction.createBlogsUserId(res.data));
 
@@ -92,6 +96,8 @@ export const getBlogsByUserId: any =
 
 export const updateBlog: any =
 	(blog: IBlog, token: string) => async (dispatch: Dispatch<IAlertType>) => {
+		const result = await checkTokenExp(token, dispatch);
+		const access_token = result ? result : token;
 		let url;
 		try {
 			dispatch(alertActions.getAlert({ loading: true }));
@@ -105,7 +111,7 @@ export const updateBlog: any =
 
 			const newBlog = { ...blog, thumbnail: url };
 
-			const res = await putAPI(`blog/${newBlog._id}`, newBlog, token);
+			const res = await putAPI(`blog/${newBlog._id}`, newBlog, access_token);
 
 			dispatch(alertActions.getAlert({ success: res.data.message }));
 		} catch (err: any) {
@@ -116,9 +122,11 @@ export const updateBlog: any =
 export const deleteBlog: any =
 	(blog: IBlog, token: string) =>
 	async (dispatch: Dispatch<IAlertType | IDeleteBlogsUserType>) => {
+		const result = await checkTokenExp(token, dispatch);
+		const access_token = result ? result : token;
 		try {
 			dispatch(blogsUserAction.deleteBlogsUserId(blog));
-			await deleteAPI(`blog/${blog._id}`, token);
+			await deleteAPI(`blog/${blog._id}`, access_token);
 		} catch (err: any) {
 			dispatch(alertActions.getAlert({ errors: err.response.data.message }));
 		}

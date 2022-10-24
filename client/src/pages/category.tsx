@@ -36,7 +36,9 @@ const Category = () => {
 
 	const handleDelete = (id: string) => {
 		if (!auth.access_token) return;
-		dispatch(deleteCategory(id, auth.access_token));
+		if (window.confirm('이 카테고리를 삭제하시겠습니까?')) {
+			dispatch(deleteCategory(id, auth.access_token));
+		}
 		setName('');
 		setEdit(null);
 	};

@@ -1,4 +1,5 @@
 import { Dispatch } from 'redux';
+import { checkTokenExp } from '../../utils/checkTokenExp';
 import { postAPI, getAPI, patchAPI, deleteAPI } from '../../utils/fetchData';
 import { ICategory } from '../../utils/types';
 import { alertActions } from '../reducers/alertReducer';
@@ -9,10 +10,12 @@ import { ICategoryType } from '../types/categoryType';
 export const createCategory: any =
 	(name: string, token: string) =>
 	async (dispatch: Dispatch<IAlertType | ICategoryType>) => {
+		const result = await checkTokenExp(token, dispatch);
+		const access_token = result ? result : token;
 		try {
 			dispatch(alertActions.getAlert({ loading: true }));
 
-			const res = await postAPI('category', { name }, token);
+			const res = await postAPI('category', { name }, access_token);
 
 			dispatch(categoryAction.createCategory(res.data.newCategory));
 
@@ -40,9 +43,11 @@ export const getCategories: any =
 export const updateCategory: any =
 	(data: ICategory, token: string) =>
 	async (dispatch: Dispatch<IAlertType | ICategoryType>) => {
+		const result = await checkTokenExp(token, dispatch);
+		const access_token = result ? result : token;
 		try {
 			dispatch(categoryAction.updateCategory(data));
-			await patchAPI(`category/${data._id}`, { name: data.name }, token);
+			await patchAPI(`category/${data._id}`, { name: data.name }, access_token);
 		} catch (err: any) {
 			dispatch(alertActions.getAlert({ errors: err.response.data.message }));
 		}
@@ -51,9 +56,11 @@ export const updateCategory: any =
 export const deleteCategory: any =
 	(id: string, token: string) =>
 	async (dispatch: Dispatch<IAlertType | ICategoryType>) => {
+		const result = await checkTokenExp(token, dispatch);
+		const access_token = result ? result : token;
 		try {
 			dispatch(categoryAction.deleteCategory(id));
-			await deleteAPI(`category/${id}`, token);
+			await deleteAPI(`category/${id}`, access_token);
 		} catch (err: any) {
 			dispatch(alertActions.getAlert({ errors: err.response.data.message }));
 		}
