@@ -4,14 +4,20 @@ import CardHoriz from '../components/cards/CardHoriz';
 import CreateForm from '../components/cards/CreateForm';
 import NotFound from '../components/global/NotFound';
 import { RootState } from '../redux/store';
-import { IBlog } from '../utils/types';
+import { IBlog, IUser } from '../utils/types';
 
 import ReactQuill from '../components/editor/ReactQuill';
-import { validCreateBlog } from '../utils/valid';
+import { shallowEqual, validCreateBlog } from '../utils/valid';
 import { alertActions } from '../redux/reducers/alertReducer';
-import { createBlog } from '../redux/actions/blogAction';
+import { createBlog, updateBlog } from '../redux/actions/blogAction';
+import { getAPI } from '../utils/fetchData';
+import { useNavigate } from 'react-router-dom';
 
-const CreateBlog = () => {
+interface IProps {
+	id?: string;
+}
+
+const CreateBlog: React.FC<IProps> = ({ id }) => {
 	const initState = {
 		user: '',
 		title: '',
@@ -28,8 +34,28 @@ const CreateBlog = () => {
 	const divRef = useRef<HTMLDivElement>(null);
 	const [text, setText] = useState('');
 
-	const { auth, categories } = useSelector((state: RootState) => state);
+	const { auth } = useSelector((state: RootState) => state);
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
+	const [oldData, setOldData] = useState<IBlog>(initState);
+
+	useEffect(() => {
+		if (!id) return;
+
+		getAPI(`blog/${id}`)
+			.then((res) => {
+				setBlog(res.data);
+				setBody(res.data.content);
+				setOldData(res.data);
+			})
+			.catch((err) => console.log(err));
+
+		return () => {
+			setBlog(initState);
+			setBody('');
+			setOldData(initState);
+		};
+	}, [id]);
 
 	useEffect(() => {
 		const div = divRef.current;
@@ -49,7 +75,22 @@ const CreateBlog = () => {
 
 		let newData = { ...blog, content: body };
 
-		dispatch(createBlog(newData, auth.access_token));
+		if (id) {
+			if ((blog.user as IUser)._id !== auth.user?._id)
+				return dispatch(
+					alertActions.getAlert({ errors: '잘못된 인증입니다.' })
+				);
+
+			const result = shallowEqual(oldData, newData);
+			if (result)
+				return dispatch(
+					alertActions.getAlert({ errors: '데이터는 변경되지 않습니다.' })
+				);
+
+			dispatch(updateBlog(newData, auth.access_token));
+		} else {
+			dispatch(createBlog(newData, auth.access_token));
+		}
 	};
 
 	if (!auth.access_token) return <NotFound />;
@@ -68,7 +109,7 @@ const CreateBlog = () => {
 				</div>
 			</div>
 
-			<ReactQuill setBody={setBody} />
+			<ReactQuill setBody={setBody} body={body} />
 
 			<div
 				ref={divRef}
@@ -84,7 +125,7 @@ const CreateBlog = () => {
 				className='btn btn-dark mt-3 d-block mx-auto'
 				onClick={handleSubmit}
 			>
-				포스트 생성
+				{id ? '게시물 업데이트' : '게시물 작성'}
 			</button>
 		</div>
 	);

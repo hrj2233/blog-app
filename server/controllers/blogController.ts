@@ -235,6 +235,26 @@ const blogController = {
 			return res.status(500).json({ message: err.message });
 		}
 	},
+	updateBlog: async (req: IReqAuth, res: Response) => {
+		if (!req.user)
+			return res.status(400).json({ message: '잘못된 인증입니다.' });
+
+		try {
+			const blog = await Blogs.findOneAndUpdate(
+				{
+					_id: req.params.id,
+					user: req.user._id,
+				},
+				req.body
+			);
+
+			if (!blog) return res.status(400).json({ message: '잘못된 인증입니다.' });
+
+			res.json({ message: '업데이트 성공!', blog });
+		} catch (err: any) {
+			return res.status(500).json({ message: err.message });
+		}
+	},
 };
 
 export default blogController;

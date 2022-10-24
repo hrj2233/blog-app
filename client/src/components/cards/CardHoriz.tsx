@@ -1,12 +1,17 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { IBlog } from '../../utils/types';
+import { useSelector } from 'react-redux';
+import { Link, useParams } from 'react-router-dom';
+import { RootState } from '../../redux/store';
+import { IBlog, IUser } from '../../utils/types';
 
 interface IProps {
 	blog: IBlog;
 }
 
 const CardHoriz: React.FC<IProps> = ({ blog }) => {
+	const { slug } = useParams();
+	const { auth } = useSelector((state: RootState) => state);
+
 	return (
 		<div className='card mb-3' style={{ minWidth: '280px' }}>
 			<div className='row g-0 p-2'>
@@ -52,11 +57,18 @@ const CardHoriz: React.FC<IProps> = ({ blog }) => {
 							</Link>
 						</h5>
 						<p className='card-text'>{blog.description}</p>
-						<p className='card-text'>
-							<small className='text-muted'>
-								{new Date(blog.createdAt).toLocaleString()}
-							</small>
-						</p>
+						{blog.title && (
+							<p className='card-text d-flex justify-content-between'>
+								{slug && (blog.user as IUser)._id === auth.user?._id && (
+									<small>
+										<Link to={`/update_blog/${blog._id}`}>업데이트</Link>
+									</small>
+								)}
+								<small className='text-muted'>
+									{new Date(blog.createdAt).toLocaleString()}
+								</small>
+							</p>
+						)}
 					</div>
 				</div>
 			</div>

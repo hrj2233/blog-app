@@ -7,9 +7,10 @@ import { checkImage, imageUpload } from '../../utils/imageUpload';
 
 interface IProps {
 	setBody: (value: string) => void;
+	body: string;
 }
 
-const Quill: React.FC<IProps> = ({ setBody }) => {
+const Quill: React.FC<IProps> = ({ setBody, body }) => {
 	const dispatch = useDispatch();
 	const quillRef = useRef<ReactQuill>(null);
 
@@ -60,6 +61,7 @@ const Quill: React.FC<IProps> = ({ setBody }) => {
 			modules={modules}
 			placeholder='내용을 작성해주세요.'
 			onChange={(e) => setBody(e)}
+			value={body}
 			ref={quillRef}
 		/>
 	);

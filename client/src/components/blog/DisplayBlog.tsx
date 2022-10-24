@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { createComment, getComments } from '../../redux/actions/commentAction';
 import { RootState } from '../../redux/store';
 import { IBlog, IUser, IComment } from '../../utils/types';
@@ -19,8 +19,6 @@ const DisplayBlog: React.FC<IProps> = ({ blog }) => {
 
 	const [showComments, setShowComments] = useState<IComment[]>([]);
 	const [loading, setLoading] = useState(false);
-
-	const navigate = useNavigate();
 	const location = useLocation();
 
 	const handleComment = (body: string) => {

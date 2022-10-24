@@ -3,7 +3,7 @@ import { IBlog } from '../../utils/types';
 import { imageUpload } from '../../utils/imageUpload';
 import { IAlertType } from '../types/alertType';
 import { alertActions } from '../reducers/alertReducer';
-import { getAPI, postAPI } from '../../utils/fetchData';
+import { getAPI, postAPI, putAPI } from '../../utils/fetchData';
 import {
 	IGetBlogsCategoryType,
 	IGetBlogsUserType,
@@ -80,6 +80,29 @@ export const getBlogsByUserId: any =
 			dispatch(blogsUserAction.getBlogsUserId({ ...res.data, id, search }));
 
 			dispatch(alertActions.getAlert({ loading: false }));
+		} catch (err: any) {
+			dispatch(alertActions.getAlert({ errors: err.response.data.message }));
+		}
+	};
+
+export const updateBlog: any =
+	(blog: IBlog, token: string) => async (dispatch: Dispatch<IAlertType>) => {
+		let url;
+		try {
+			dispatch(alertActions.getAlert({ loading: true }));
+
+			if (typeof blog.thumbnail !== 'string') {
+				const photo = await imageUpload(blog.thumbnail);
+				url = photo.url;
+			} else {
+				url = blog.thumbnail;
+			}
+
+			const newBlog = { ...blog, thumbnail: url };
+
+			const res = await putAPI(`blog/${newBlog._id}`, newBlog, token);
+
+			dispatch(alertActions.getAlert({ success: res.data.message }));
 		} catch (err: any) {
 			dispatch(alertActions.getAlert({ errors: err.response.data.message }));
 		}
