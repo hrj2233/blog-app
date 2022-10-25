@@ -91,7 +91,8 @@ const authController = {
 		}
 	},
 	logout: async (req: IReqAuth, res: Response) => {
-		if (!req.user) return res.status(400).json({ msg: '잘못된 인증입니다.' });
+		if (!req.user)
+			return res.status(400).json({ message: '잘못된 인증입니다.' });
 		try {
 			res.clearCookie('refreshtoken', { path: `/api/refresh_token` });
 			await Users.findOneAndUpdate(
@@ -123,7 +124,7 @@ const authController = {
 					.status(400)
 					.json({ message: '이 계정은 존재하지 않습니다.' });
 			if (rf_token !== user.rf_token)
-				return res.status(400).json({ msg: '지금 로그인 하세요!' });
+				return res.status(400).json({ message: '지금 로그인 하세요!' });
 			const access_token = generateAccessToken({ id: user._id });
 			const refresh_token = generateRefreshToken({ id: user._id }, res);
 
@@ -151,7 +152,7 @@ const authController = {
 			);
 
 			if (!email_verified)
-				return res.status(500).json({ msg: '이메일 인증 실패' });
+				return res.status(500).json({ message: '이메일 인증 실패' });
 
 			const password = email + 'your google secrect password';
 			const passwordHash = await bcrypt.hash(password, 12);
@@ -207,6 +208,36 @@ const authController = {
 			return res.status(500).json({ message: err.message });
 		}
 	},
+	forgotPassword: async (req: Request, res: Response) => {
+		try {
+			const { account } = req.body;
+
+			const user = await Users.findOne({ account });
+			if (!user)
+				return res
+					.status(400)
+					.json({ message: '이 계정은 존재하지 않습니다.' });
+
+			if (user.type !== 'register')
+				return res.status(400).json({
+					message: `${user.type} 의 빠른 로그인 계정은 이 기능을 사용할 수 없습니다.`,
+				});
+
+			const access_token = generateAccessToken({ id: user._id });
+
+			const url = `${CLIENT_URL}/reset_password/${access_token}`;
+
+			if (validatePhone(account)) {
+				sendSms(account, url, '비밀번호를 잊으셨나요?');
+				return res.json({ message: '성공! 휴대전화를 확인해주세요.' });
+			} else if (validateEmail(account)) {
+				sendEmail(account, url, '비밀번호를 잊으셨나요?');
+				return res.json({ message: '성공! 이메일을 확인해주세요.' });
+			}
+		} catch (err: any) {
+			return res.status(500).json({ message: err.message });
+		}
+	},
 };
 
 const loginUser = async (user: IUser, password: string, res: Response) => {
@@ -246,7 +277,7 @@ const registerUser = async (user: IUserParams, res: Response) => {
 	await newUser.save();
 
 	res.json({
-		msg: '로그인 성공!',
+		message: '로그인 성공!',
 		access_token,
 		user: { ...newUser._doc, password: '' },
 	});

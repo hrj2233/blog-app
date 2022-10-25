@@ -65,7 +65,7 @@ const categoryController = {
 			const blog = await Blogs.findOne({ category: req.params.id });
 			if (blog)
 				return res.status(400).json({
-					msg: '삭제할 수 없습니다! 이 카테고리에 블로그가 존재합니다.',
+					message: '삭제할 수 없습니다! 이 카테고리에 블로그가 존재합니다.',
 				});
 
 			const category = await Categories.findByIdAndDelete(req.params.id);

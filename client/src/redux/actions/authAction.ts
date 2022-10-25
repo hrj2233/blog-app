@@ -131,3 +131,16 @@ export const verifySMS = async (
 		}, 100);
 	}
 };
+
+export const forgotPassword: any =
+	(account: string) => async (dispatch: Dispatch<IAuthType | IAlertType>) => {
+		try {
+			dispatch(alertActions.getAlert({ loading: true }));
+
+			const res = await postAPI('forgot_password', { account });
+
+			dispatch(alertActions.getAlert({ success: res.data.message }));
+		} catch (err: any) {
+			dispatch(alertActions.getAlert({ errors: err.response.data.message }));
+		}
+	};
