@@ -11,7 +11,7 @@ const categorySlice = createSlice({
 			return action.payload;
 		},
 		createCategory(state, action) {
-			return [action.payload];
+			return [action.payload, ...state];
 		},
 		updateCategory(state, action) {
 			return state.map((item) =>

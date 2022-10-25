@@ -1,6 +1,7 @@
 import jwt_decode from 'jwt-decode';
 import axios from 'axios';
 import { authActions } from '../redux/reducers/authReducer';
+import { getAPI } from './fetchData';
 
 interface IToken {
 	exp: number;
@@ -13,7 +14,7 @@ export const checkTokenExp = async (token: string, dispatch: any) => {
 
 	if (decoded.exp >= Date.now() / 1000) return;
 
-	const res = await axios.get('/api/refresh_token');
+	const res = await getAPI('refresh_token');
 	dispatch(authActions.getAuth(res.data));
 	return res.data.access_token;
 };

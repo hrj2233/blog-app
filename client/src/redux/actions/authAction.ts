@@ -65,6 +65,7 @@ export const refreshToken: any =
 			dispatch(alertActions.getAlert({}));
 		} catch (err: any) {
 			dispatch(alertActions.getAlert({ errors: err.response.data.message }));
+			localStorage.removeItem('logged');
 		}
 	};
 

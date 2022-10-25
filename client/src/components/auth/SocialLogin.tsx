@@ -13,7 +13,7 @@ const SocialLogin = () => {
 	return (
 		<>
 			<div className='my-4'>
-				<GoogleOAuthProvider clientId='884830555574-d8vc5mir0dikhobd7bsl88l7052ipqde.apps.googleusercontent.com'>
+				<GoogleOAuthProvider clientId='731783632391-klu7k4chlv8kk0mkde2m4t8bp7j058p6.apps.googleusercontent.com'>
 					<GoogleLogin onSuccess={onSuccess} />
 				</GoogleOAuthProvider>
 			</div>
