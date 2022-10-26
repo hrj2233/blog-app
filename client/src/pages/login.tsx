@@ -17,7 +17,7 @@ const Login = () => {
 			let url = location.search.replace('?', '/');
 			return location.search === '' ? navigate('/') : navigate(url);
 		}
-	}, [auth.access_token, navigate]);
+	}, [auth.access_token, navigate, location.search]);
 
 	return (
 		<div className='auth_page'>

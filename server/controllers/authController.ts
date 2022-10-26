@@ -111,11 +111,13 @@ const authController = {
 			const rf_token = req.cookies.refreshtoken;
 			if (!rf_token)
 				return res.status(400).json({ message: '지금 로그인 하세요!' });
+
 			const decoded = <IDecodedToken>(
-				jwt.verify(rf_token, `${process.env.REFRESH_TOKEN}`)
+				jwt.verify(rf_token, `${process.env.REFRESH_TOKEN_SECRET}`)
 			);
-			if (!decoded)
+			if (!decoded.id)
 				return res.status(400).json({ message: '지금 로그인 하세요!' });
+
 			const user = await Users.findById(decoded.id).select(
 				'-password +rf_token'
 			);
@@ -123,8 +125,10 @@ const authController = {
 				return res
 					.status(400)
 					.json({ message: '이 계정은 존재하지 않습니다.' });
+
 			if (rf_token !== user.rf_token)
 				return res.status(400).json({ message: '지금 로그인 하세요!' });
+
 			const access_token = generateAccessToken({ id: user._id });
 			const refresh_token = generateRefreshToken({ id: user._id }, res);
 
@@ -134,6 +138,7 @@ const authController = {
 					rf_token: refresh_token,
 				}
 			);
+
 			res.json({ access_token, user });
 		} catch (err: any) {
 			return res.status(500).json({ message: err.message });

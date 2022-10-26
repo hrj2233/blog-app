@@ -15,8 +15,8 @@ const App = () => {
 
 	useEffect(() => {
 		dispatch(getHomeBlogs());
-		dispatch(getCategories());
 		dispatch(refreshToken());
+		dispatch(getCategories());
 	}, [dispatch]);
 
 	return (

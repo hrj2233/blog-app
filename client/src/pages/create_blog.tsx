@@ -11,7 +11,6 @@ import { shallowEqual, validCreateBlog } from '../utils/valid';
 import { alertActions } from '../redux/reducers/alertReducer';
 import { createBlog, updateBlog } from '../redux/actions/blogAction';
 import { getAPI } from '../utils/fetchData';
-import { useNavigate } from 'react-router-dom';
 
 interface IProps {
 	id?: string;
@@ -36,7 +35,6 @@ const CreateBlog: React.FC<IProps> = ({ id }) => {
 
 	const { auth } = useSelector((state: RootState) => state);
 	const dispatch = useDispatch();
-	const navigate = useNavigate();
 	const [oldData, setOldData] = useState<IBlog>(initState);
 
 	useEffect(() => {

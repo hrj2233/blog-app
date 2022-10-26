@@ -62,6 +62,7 @@ export const refreshToken: any =
 
 			const res = await getAPI('refresh_token');
 			dispatch(authActions.getAuth(res.data));
+
 			dispatch(alertActions.getAlert({}));
 		} catch (err: any) {
 			dispatch(alertActions.getAlert({ errors: err.response.data.message }));

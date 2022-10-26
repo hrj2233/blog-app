@@ -4,7 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 import { deleteBlog } from '../../redux/actions/blogAction';
 import { alertActions } from '../../redux/reducers/alertReducer';
 import { RootState } from '../../redux/store';
-import { IBlog, IUser } from '../../utils/types';
+import { IBlog } from '../../utils/types';
 
 interface IProps {
 	blog: IBlog;
