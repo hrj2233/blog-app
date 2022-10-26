@@ -39,6 +39,7 @@ export const createBlog: any =
 			dispatch(blogsUserAction.createBlogsUserId(res.data));
 
 			dispatch(alertActions.getAlert({ loading: false }));
+			dispatch(alertActions.getAlert({ success: '블로그 생성!' }));
 		} catch (err: any) {
 			dispatch(alertActions.getAlert({ errors: err.response.data.message }));
 		}

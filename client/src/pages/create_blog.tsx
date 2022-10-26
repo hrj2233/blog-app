@@ -98,7 +98,6 @@ const CreateBlog: React.FC<IProps> = ({ id }) => {
 			dispatch(updateBlog(newData, auth.access_token));
 		} else {
 			dispatch(createBlog(newData, auth.access_token));
-			window.location.href = '/';
 		}
 	};
 
