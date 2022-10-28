@@ -62,12 +62,7 @@ const DisplayBlog: React.FC<IProps> = ({ blog }) => {
 
 	return (
 		<section>
-			<h2
-				className='text-center my-3 text-capitalize fs-1'
-				style={{ color: '#ff7a00' }}
-			>
-				{blog.title}
-			</h2>
+			<h2 className='text-center my-3 text-capitalize fs-1'>{blog.title}</h2>
 
 			<div className='text-end fst-italic' style={{ color: 'teal' }}>
 				<small>
@@ -80,14 +75,13 @@ const DisplayBlog: React.FC<IProps> = ({ blog }) => {
 			</div>
 
 			<div
+				className='py-3'
 				dangerouslySetInnerHTML={{
 					__html: blog.content,
 				}}
 			/>
 			<hr className='my-1' />
-			<h3 className='pt-3' style={{ color: '#ff7a00' }}>
-				✩ 댓글 ✩
-			</h3>
+			<h3 className='pt-3'>댓글</h3>
 
 			{auth.user ? (
 				<Input callback={handleComment} />

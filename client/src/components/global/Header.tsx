@@ -5,9 +5,16 @@ import Search from './Search';
 const Header = () => {
 	return (
 		<header style={{ position: 'sticky', top: 0, left: 0, zIndex: 2 }}>
-			<nav className='navbar navbar-expand-lg navbar-light bg-light p-3'>
+			<nav
+				className='navbar navbar-expand-lg navbar-light'
+				style={{ backgroundColor: '#fff' }}
+			>
 				<h1>
-					<Link className='navbar-brand' to='/'>
+					<Link
+						className='navbar-brand'
+						to='/'
+						style={{ fontSize: '28px', color: '#00C08B' }}
+					>
 						Blog
 					</Link>
 				</h1>

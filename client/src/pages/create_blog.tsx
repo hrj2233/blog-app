@@ -127,7 +127,9 @@ const CreateBlog: React.FC<IProps> = ({ id }) => {
 				style={{ display: 'none' }}
 			/>
 
-			<small>{text.length}</small>
+			<small className='fw-bold' style={{ color: '#00C08B' }}>
+				글자 수: {text.length}
+			</small>
 
 			<button
 				className='btn btn-dark mt-3 d-block mx-auto'

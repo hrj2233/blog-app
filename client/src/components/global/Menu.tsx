@@ -34,7 +34,11 @@ const Menu = () => {
 		<ul className='navbar-nav ms-auto'>
 			{navLinks.map((link, index) => (
 				<li key={index} className={`nav-item ${isActive(link.path)}`}>
-					<Link className='nav-link' to={link.path}>
+					<Link
+						className='nav-link text-dark'
+						to={link.path}
+						style={{ fontWeight: 600 }}
+					>
 						{link.label}
 					</Link>
 				</li>
@@ -42,7 +46,11 @@ const Menu = () => {
 
 			{auth.user?.role === 'admin' && (
 				<li className={`nav-item ${isActive('/category')}`}>
-					<Link to='/category' className='nav-link'>
+					<Link
+						to='/category'
+						className='nav-link text-dark'
+						style={{ fontWeight: 600 }}
+					>
 						Category
 					</Link>
 				</li>
