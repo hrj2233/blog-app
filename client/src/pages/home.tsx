@@ -10,16 +10,16 @@ const Home = () => {
 
 	if (homeBlogs.length === 0) return <Loading />;
 	return (
-		<div className='home_page'>
+		<main className='home_page'>
 			{homeBlogs.map((homeBlog) => (
-				<div key={homeBlog._id}>
+				<section key={homeBlog._id}>
 					{homeBlog.count > 0 && (
 						<>
-							<h3>
+							<h2>
 								<Link to={`/blogs/${homeBlog.name.toLowerCase()}`}>
 									{homeBlog.name} <small>({homeBlog.count})</small>
 								</Link>
-							</h3>
+							</h2>
 							<hr className='mt-1' />
 
 							<div className='home_blogs'>
@@ -38,9 +38,9 @@ const Home = () => {
 							더보기 &gt;&gt;
 						</Link>
 					)}
-				</div>
+				</section>
 			))}
-		</div>
+		</main>
 	);
 };
 

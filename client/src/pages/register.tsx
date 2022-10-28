@@ -5,7 +5,7 @@ const Register = () => {
 	const location = useLocation();
 
 	return (
-		<div className='auth_page'>
+		<main className='auth_page'>
 			<div className='auth_box'>
 				<h2 className='text-uppercase text-center mb-4'>계정 만들기</h2>
 				<RegisterForm />
@@ -16,7 +16,7 @@ const Register = () => {
 					</Link>
 				</p>
 			</div>
-		</div>
+		</main>
 	);
 };
 

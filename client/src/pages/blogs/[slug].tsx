@@ -52,15 +52,15 @@ const BlogsByCategory = () => {
 
 	if (!blogs) return <Loading />;
 	return (
-		<div className='blogs_category'>
-			<div className='show_blogs'>
+		<main className='blogs_category'>
+			<section className='show_blogs'>
 				{blogs.map((blog) => (
 					<CardVert key={blog._id} blog={blog} />
 				))}
-			</div>
+			</section>
 
 			{total > 1 && <Pagination total={total} callback={handlePagination} />}
-		</div>
+		</main>
 	);
 };
 

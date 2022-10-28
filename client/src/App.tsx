@@ -20,7 +20,7 @@ const App = () => {
 	}, [dispatch]);
 
 	return (
-		<div className='container'>
+		<>
 			<Router>
 				<Alert />
 				<Header />
@@ -31,7 +31,7 @@ const App = () => {
 				</Routes>
 				<Footer />
 			</Router>
-		</div>
+		</>
 	);
 };
 

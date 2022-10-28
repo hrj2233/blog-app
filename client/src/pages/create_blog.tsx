@@ -104,7 +104,7 @@ const CreateBlog: React.FC<IProps> = ({ id }) => {
 	if (!auth.access_token) return <NotFound />;
 
 	return (
-		<div className='my-4 create_blog'>
+		<main className='my-4 create_blog'>
 			<div className='row mt-4'>
 				<div className='col-md-6'>
 					<h2>생성</h2>
@@ -135,7 +135,7 @@ const CreateBlog: React.FC<IProps> = ({ id }) => {
 			>
 				{id ? '게시물 업데이트' : '게시물 작성'}
 			</button>
-		</div>
+		</main>
 	);
 };
 

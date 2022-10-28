@@ -61,7 +61,7 @@ const DisplayBlog: React.FC<IProps> = ({ blog }) => {
 	};
 
 	return (
-		<div>
+		<section>
 			<h2
 				className='text-center my-3 text-capitalize fs-1'
 				style={{ color: '#ff7a00' }}
@@ -85,14 +85,16 @@ const DisplayBlog: React.FC<IProps> = ({ blog }) => {
 				}}
 			/>
 			<hr className='my-1' />
-			<h3 style={{ color: '#ff7a00' }}>✩ 댓글 ✩</h3>
+			<h3 className='pt-3' style={{ color: '#ff7a00' }}>
+				✩ 댓글 ✩
+			</h3>
 
 			{auth.user ? (
 				<Input callback={handleComment} />
 			) : (
-				<h5>
+				<h4>
 					Please <Link to={`/login?blog/${blog._id}`}>login</Link> to comment.
-				</h5>
+				</h4>
 			)}
 
 			{loading ? (
@@ -105,7 +107,7 @@ const DisplayBlog: React.FC<IProps> = ({ blog }) => {
 			{comments.total > 1 && (
 				<Pagination total={comments.total} callback={handlePagination} />
 			)}
-		</div>
+		</section>
 	);
 };
 

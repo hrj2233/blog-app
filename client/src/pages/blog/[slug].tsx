@@ -33,10 +33,10 @@ const DetailBlog = () => {
 
 	if (loading) return <Loading />;
 	return (
-		<div className='my-4'>
+		<main className='my-4'>
 			{error && showErrorMessage(error)}
 			{blog && <DisplayBlog blog={blog} />}
-		</div>
+		</main>
 	);
 };
 

@@ -6,7 +6,7 @@ import Toast from './Toast';
 export const Alert = () => {
 	const { alert } = useSelector((state: RootState) => state);
 	return (
-		<div>
+		<div className='alertContainer'>
 			{alert.loading && <Loading />}
 			{alert.errors && (
 				<Toast title='Errors' body={alert.errors} bgColor='bg-danger' />

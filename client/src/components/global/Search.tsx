@@ -31,7 +31,7 @@ const Search = () => {
 	}, [pathname]);
 
 	return (
-		<div className='search w-100 position-relative me-4'>
+		<div className='search w-100 position-relative me-4 my-2'>
 			<input
 				type='text'
 				className='form-control me-2 w-100'
@@ -52,7 +52,7 @@ const Search = () => {
 					{blogs.length ? (
 						blogs.map((blog) => <CardHoriz key={blog._id} blog={blog} />)
 					) : (
-						<h3 className='text-center'>블로그 없음</h3>
+						<p className='text-center fs-3 fw-bold py-2'>블로그 없음</p>
 					)}
 				</div>
 			)}

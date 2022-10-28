@@ -19,7 +19,7 @@ const CardVert: React.FC<IProps> = ({ blog }) => {
 			)}
 
 			<div className='card-body'>
-				<h5 className='card-title'>
+				<h3 className='card-title'>
 					<Link
 						to={`/blog/${blog._id}`}
 						style={{
@@ -29,7 +29,7 @@ const CardVert: React.FC<IProps> = ({ blog }) => {
 					>
 						{blog.title.slice(0, 50) + '...'}
 					</Link>
-				</h5>
+				</h3>
 				<p className='card-text'>{blog.description.slice(0, 100) + '...'}</p>
 
 				<p className='card-text d-flex justify-content-between'>

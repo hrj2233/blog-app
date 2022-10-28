@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { logout } from '../../redux/actions/authAction';
+
 const Menu = () => {
 	const { auth } = useSelector((state: RootState) => state);
 	const dispatch = useDispatch();

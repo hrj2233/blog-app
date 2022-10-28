@@ -15,7 +15,7 @@ const ForgotPassword = () => {
 	};
 
 	return (
-		<div className='my-4' style={{ maxWidth: '500px' }}>
+		<main className='my-4' style={{ maxWidth: '500px' }}>
 			<h2>비밀번호를 잊으셨나요?</h2>
 
 			<form className='form-group' onSubmit={handleSubmit}>
@@ -38,7 +38,7 @@ const ForgotPassword = () => {
 					</button>
 				</div>
 			</form>
-		</div>
+		</main>
 	);
 };
 

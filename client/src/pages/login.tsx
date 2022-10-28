@@ -20,7 +20,7 @@ const Login = () => {
 	}, [auth.access_token, navigate, location.search]);
 
 	return (
-		<div className='auth_page'>
+		<main className='auth_page'>
 			<div className='auth_box'>
 				<h2 className='text-uppercase text-center mb-4'>로그인</h2>
 				<SocialLogin />
@@ -42,7 +42,7 @@ const Login = () => {
 					</Link>
 				</p>
 			</div>
-		</div>
+		</main>
 	);
 };
 export default Login;

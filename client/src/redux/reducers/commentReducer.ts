@@ -26,7 +26,7 @@ const commentSlice = createSlice({
 					item._id === action.payload.comment_root
 						? {
 								...item,
-								replyCM: [action.payload, ...(item.replyCM as [])],
+								replyCM: [...(item.replyCM as []), action.payload],
 						  }
 						: item
 				),
